@@ -1,0 +1,195 @@
+*,
+*::before,
+*::after { 
+    box-sizing:border-box; 
+    margin:0; 
+    padding:0; }
+
+:root{
+  --font:'Chewy',cursive;
+  /* light theme */
+  --bg:#fefcef;
+  --text:#2b2b2b;
+  --muted:#666;
+  --shadow:4px 4px 12px rgba(0,0,0,.1);
+  --max:1000px;
+}
+
+/* ─── Layout ─────────────────────────────────────────── */
+body{
+  font-family:var(--font);
+  background:var(--bg);
+  color:var(--text);
+  display:flex;
+  min-height:100vh;
+  transition:background .4s,color .4s;
+}
+.wrapper{
+  width:min(90%,var(--max));
+  margin:auto; 
+  padding-block:2.5rem;
+ }
+
+/* ─── Typography & buttons ──────────────────────────── */
+.title{
+  text-align:center;
+  font-size:2.5rem; 
+  margin-bottom:.5rem;
+ }
+.description{ 
+  text-align:center;
+  font-size:1.1rem; 
+  color:var(--muted);
+  margin-bottom:2rem;
+ }
+
+.toggle-btn{
+  display:block; 
+  margin:.5rem auto; 
+  padding:.5rem 1.25rem;
+  background:#e6e6e6; 
+  border:none; 
+  border-radius:5px;
+  cursor:pointer; 
+  font-family:var(--font); 
+  font-size:1rem;
+  transition:background .3s;
+}
+.toggle-btn:hover{ 
+  background:#ccc; 
+}
+
+/* ─── Quote card (sticky note) ───────────────────────── */
+.quote-card{
+  background:#fff8b3;
+  border-radius:.5rem;
+  padding:1.5rem 1.25rem;
+  box-shadow:var(--shadow);
+  position:relative;
+  font-size:1rem;
+  max-width:500px;
+  margin:1rem auto;
+  transform:rotate(-1.5deg);
+  transition:background-color .4s, transform .2s ease, opacity .3s;
+}
+.quote-card:hover{ 
+  transform:scale(1.03); 
+  box-shadow:6px 6px 18px rgba(0,0,0,.15); 
+}
+
+.quote-card:nth-child(odd){ 
+    background:#c1f0c1; 
+    transform:rotate(1.5deg);
+}
+.quote-card:nth-child(3n){ 
+    background:#ffd1dc; 
+    transform:rotate(-2deg); 
+}
+
+.quote-card::before{
+  content:"";
+  width:14px; 
+  height:14px; 
+  border-radius:50%;
+  background:radial-gradient(circle at 30% 30%,#ff5e5e,#b30000);
+  position:absolute; 
+  top:10px; 
+  left:50%; 
+  transform:translateX(-50%);
+  box-shadow:0 2px 4px rgba(0,0,0,.3), inset -2px -2px 3px rgba(255,255,255,.3);
+  z-index:1;
+}
+
+/* Fade‑typing stability */
+.quote-card blockquote{ 
+    margin-bottom:1rem; 
+    font-style:italic; 
+    line-height:1.5; 
+    min-height:4rem; 
+}
+.quote-card figcaption{ 
+    text-align:right; 
+    font-size:.9rem; 
+    color:#444; 
+}
+.quote-card blockquote,
+.quote-card figcaption{ 
+    transition:opacity .3s; 
+}
+
+/* Grid wall */
+.quotes{ 
+    display:grid; 
+    gap:2rem; 
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); 
+    margin-top:1rem; 
+}
+.quotes .quote-card{ 
+    transform:none; 
+}
+
+/* Favorite heart */
+.fav-btn{
+  position:absolute; 
+  top:12px; 
+  right:12px;
+  background:none; 
+  border:none;
+  font-size:1.2rem; 
+  cursor:pointer; 
+  z-index:2;
+  transition:transform .2s;
+}
+.fav-btn:hover{ 
+    transform:scale(1.2);
+}
+.fav-btn.favorited{ 
+    color:crimson; 
+}
+
+/* Footer */
+.footnote{ 
+    text-align:center; 
+    font-size:.9rem; 
+    margin-top:3rem; 
+    color:var(--muted); 
+}
+
+/* ─── 🌙 Dark theme (green / yellow / pink) ──────────── */
+body.dark{
+  background:#0f2f20;
+  color:#fdf6e3;
+}
+body.dark .description,
+body.dark .footnote{ 
+    color:#dcd7c9;
+}
+
+body.dark .toggle-btn{
+  background:#254d37; 
+  color:#ffe57f; 
+  border:1px solid #ffe57f;
+}
+body.dark .toggle-btn:hover{ 
+    background:#336b4a; 
+    color:#f8b5c1; 
+}
+
+body.dark .quote-card{ 
+    background:#f8b5c1; 
+    color:#1d1d1d; 
+}
+body.dark .quote-card:nth-child(odd){ 
+    background:#f7e46d;
+}
+body.dark .quote-card:nth-child(3n){ 
+    background:#a2c7a2;
+}
+
+body.dark .quote-card::before{
+  background:#ff7c94; 
+  box-shadow:0 0 4px rgba(255,255,255,.3);
+}
+body.dark .quote-card figcaption{ 
+    color:#444; 
+}
