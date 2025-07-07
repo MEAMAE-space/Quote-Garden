@@ -20,6 +20,6 @@ Quote Garden is a sticky-note-inspired web app that displays motivational quotes
 
 ## 🔗 Demo
 
-👉 [Live Demo](https://yourusername.github.io/quote-garden/)  
+👉 [Live Demo](https://meamae-space.github.io/Quote-Garden/)  
 Hosted with GitHub Pages
 
