@@ -2,7 +2,7 @@
 
 Quote Garden is a sticky-note-inspired web app that displays motivational quotes with a playful and calming design. Built using **HTML, CSS, and JavaScript**, it includes multiple view modes, a typing effect, dark mode, favorites, and a soothing garden aesthetic to lift your mood.
 
-![Banner](banner.png)
+![Banner](Banner.png)
 
 ---
 
