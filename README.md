@@ -14,10 +14,10 @@ Quote Garden is a sticky-note-inspired web app that displays motivational quotes
 - 🗂️ **Grid view** for browsing multiple quotes at once
 - 🎨 Color-changing quote cards for each new tap
 - 🧠 Handwritten font style for a natural look
-- 💾 Persistent Preferences: Remembers your last selected theme and dark mode using localStorage.
-- 📂 Export: Save your favorite quotes as TXT or PDF files.
-- 🔔 Daily Quote Reminder: (Optional feature for future updates).
-- 🎨 Themes: Choose between multiple backgrounds — Garden, Notebook, Gradient, Starry Night,and more.
+- 💾 **Persistent Preferences:** Remembers your last selected theme and dark mode using localStorage.
+- 📂 **Export:** Save your favorite quotes as TXT or PDF files.
+- 🔔 **Daily Quote Reminder:** (Optional feature for future updates).
+- 🎨 **Themes:** Choose between multiple backgrounds — Garden, Notebook, Gradient, Starry Night,and more.
 - 📱 Fully responsive and mobile-friendly
 
 ---
