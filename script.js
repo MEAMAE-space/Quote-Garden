@@ -102,121 +102,234 @@ const quotes = [
   { text: "Push yourself, because no one else is going to do it for you.", author: "Unknown" }
 ];
 
-/* ─── DOM references ──────────────────────────────── */
+/* DOM references */
 const quoteBox   = document.getElementById('quote-container');
 const nextBtn    = document.getElementById('next-quote');
 const themeBtn   = document.getElementById('theme-toggle');
 const viewBtn    = document.getElementById('view-toggle');
 const favViewBtn = document.getElementById('fav-view-toggle');
 const gridWrap   = document.getElementById('quote-grid');
+const themeSelect = document.getElementById('theme-selector');
+const menuToggle = document.getElementById('menu-toggle');
+const menuButtons = document.getElementById('menu-buttons');
+const menuToggleBtn = document.getElementById('menu-toggle');
+const sidebar = document.getElementById('sidebar');
+const closeMenuBtn = document.getElementById('close-menu');
+const overlay = document.getElementById('overlay');
 
-/* ─── Favorites storage ───────────────────────────── */
+/* Favorites storage */
 let favorites = JSON.parse(localStorage.getItem("favQuotes") || "[]");
 const isFavorited = txt => favorites.includes(txt);
 
-function toggleFavorite(txt, btn){
-  favorites = isFavorited(txt) ? favorites.filter(q=>q!==txt) : [...favorites,txt];
+function toggleFavorite(txt, btn) {
+  favorites = isFavorited(txt) ? favorites.filter(q=>q!==txt) : [...favorites, txt];
   localStorage.setItem("favQuotes", JSON.stringify(favorites));
   btn.classList.toggle("favorited", isFavorited(txt));
   btn.textContent = isFavorited(txt) ? "❤️" : "🤍";
-  if(currentView==='favorites') renderFavorites();
+  if(currentView === 'favorites') renderFavorites();
 }
 
-/* ─── HTML builders ───────────────────────────────── */
+/* HTML Builders */
 const quoteHTML = q => `
-  <button class="fav-btn ${isFavorited(q.text)?'favorited':''}">
-    ${isFavorited(q.text)?"❤️":"🤍"}
+  <button class="fav-btn ${isFavorited(q.text) ? 'favorited' : ''}">
+    ${isFavorited(q.text) ? "❤️" : "🤍"}
   </button>
   <blockquote id="typed-quote"></blockquote>
   <figcaption>— ${q.author}</figcaption>
 `;
 
-function populateGrid(list = quotes){
-  gridWrap.innerHTML = list.map(q=>`
+function populateGrid(list = quotes) {
+  gridWrap.innerHTML = list.map(q => `
     <figure class="quote-card">
-      <button class="fav-btn ${isFavorited(q.text)?'favorited':''}">
-        ${isFavorited(q.text)?"❤️":"🤍"}
+      <button class="fav-btn ${isFavorited(q.text) ? 'favorited' : ''}">
+        ${isFavorited(q.text) ? "❤️" : "🤍"}
       </button>
       <blockquote>“${q.text}”</blockquote>
       <figcaption>— ${q.author}</figcaption>
     </figure>
   `).join('');
 
-  gridWrap.querySelectorAll(".quote-card").forEach(card=>{
+  gridWrap.querySelectorAll(".quote-card").forEach(card => {
     const btn = card.querySelector(".fav-btn");
     const text = card.querySelector("blockquote").innerText.replace(/[“”]/g,'');
-    btn.addEventListener('click', ()=>toggleFavorite(text,btn));
+    btn.addEventListener('click', () => toggleFavorite(text, btn));
   });
 }
 
-const renderFavorites = () => populateGrid(quotes.filter(q=>isFavorited(q.text)));
+const renderFavorites = () => populateGrid(quotes.filter(q => isFavorited(q.text)));
 
-/* ─── Typing effect ───────────────────────────────── */
-function typeText(el, text, speed=30){
-  el.textContent=''; let i=0;
-  const type=()=>{ if(i<text.length){ el.textContent+=text.charAt(i++); setTimeout(type,speed);} };
+/* Typing Effect */
+function typeText(el, text, speed = 30) {
+  el.textContent = ''; let i = 0;
+  const type = () => { if (i < text.length) { el.textContent += text.charAt(i++); setTimeout(type, speed); } };
   type();
 }
 
-/* ─── Color palettes ──────────────────────────────── */
+/* Color Palettes */
 const lightColors = ["#f7e46d","#f8b5c1","#a2c7a2","#fff8b3","#c1f0c1","#ffd1dc"];
 const darkColors  = ["#f7e46d","#f8b5c1","#a2c7a2","#ffd1dc"];
 
-/* ─── Random Quote view ───────────────────────────── */
-function showRandomQuote(){
-  const q = quotes[Math.floor(Math.random()*quotes.length)];
+/* Random Quote */
+function showRandomQuote() {
+  const q = quotes[Math.floor(Math.random() * quotes.length)];
   const colors = document.body.classList.contains('dark') ? darkColors : lightColors;
-  const randomColor = colors[Math.floor(Math.random()*colors.length)];
+  const randomColor = colors[Math.floor(Math.random() * colors.length)];
 
-  // fade out
-  quoteBox.style.opacity=0;
-
-  setTimeout(()=>{
+  quoteBox.style.opacity = 0;
+  setTimeout(() => {
     quoteBox.innerHTML = quoteHTML(q);
     quoteBox.style.backgroundColor = randomColor;
-
     const block = document.getElementById('typed-quote');
     typeText(block, `“${q.text}”`, 30);
 
     const btn = quoteBox.querySelector('.fav-btn');
-    btn.addEventListener('click', ()=>toggleFavorite(q.text,btn));
+    btn.addEventListener('click', () => toggleFavorite(q.text, btn));
 
-    // fade in
-    quoteBox.style.opacity=1;
-  },200);
+    quoteBox.style.opacity = 1;
+  }, 200);
 }
 
-/* ─── Theme toggle ─────────────────────────────────── */
-themeBtn.addEventListener('click', ()=>{
+/* --- Theme and Dark Mode with LocalStorage --- */
+function loadPreferences() {
+  const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+  const savedTheme = localStorage.getItem('selectedTheme') || 'none';
+
+  // Apply dark mode
+  if (savedDarkMode) {
+    document.body.classList.add('dark');
+    themeBtn.textContent = '🌞 Light Mode';
+  } else {
+    document.body.classList.remove('dark');
+    themeBtn.textContent = '🌙 Dark Mode';
+  }
+
+  // Remove old theme classes
+  document.body.classList.forEach(cls => {
+    if (cls.startsWith('theme-')) document.body.classList.remove(cls);
+  });
+
+  // Add the saved theme
+  document.body.classList.add(`theme-${savedTheme}`);
+  themeSelect.value = savedTheme;
+}
+
+function savePreferences() {
+  localStorage.setItem('darkMode', document.body.classList.contains('dark'));
+  const theme = themeSelect.value;
+  localStorage.setItem('selectedTheme', theme);
+}
+
+themeBtn.addEventListener('click', () => {
   document.body.classList.toggle('dark');
   themeBtn.textContent = document.body.classList.contains('dark') ? '🌞 Light Mode' : '🌙 Dark Mode';
-  // refresh color of current random note if in random view
-  if(currentView==='random') showRandomQuote();
+  savePreferences();
 });
 
-/* ─── View management ─────────────────────────────── */
-let currentView='random';
+themeSelect.addEventListener('change', (e) => {
+  const selectedTheme = e.target.value;
 
-function switchView(view){
-  currentView=view;
-  quoteBox.style.display = view==='random' ? 'block' : 'none';
-  nextBtn.style.display  = view==='random' ? 'block' : 'none';
-  gridWrap.style.display = view!=='random' ? 'grid' : 'none';
+  // Remove old theme classes
+  document.body.classList.forEach(cls => {
+    if (cls.startsWith('theme-')) document.body.classList.remove(cls);
+  });
 
-  if(view==='grid'){
-    populateGrid();          viewBtn.textContent="🎲 Random View"; favViewBtn.textContent="❤️ Favorites";
-  }else if(view==='favorites'){
-    renderFavorites();       viewBtn.textContent="📋 Grid View";   favViewBtn.textContent="🎲 Random View";
-  }else{
-    showRandomQuote();       viewBtn.textContent="📋 Grid View";   favViewBtn.textContent="❤️ Favorites";
+  // Add new theme
+  document.body.classList.add(`theme-${selectedTheme}`);
+  savePreferences();
+});
+
+loadPreferences();
+
+/* Menu Toggle */
+menuToggle.addEventListener('click', () => {
+  menuButtons.classList.toggle('menu-show');
+});
+
+/* Theme Selector */
+themeSelect.addEventListener('change', (e) => {
+  // Keep dark mode if active
+  const darkMode = document.body.classList.contains('dark');
+  document.body.className = ''; // reset classes
+  document.body.classList.add(`theme-${e.target.value}`);
+  if (darkMode) document.body.classList.add('dark');
+});
+
+/* Daily Quote Notification */
+document.getElementById("daily-reminder").addEventListener("click", () => {
+  if (Notification.permission !== "granted") Notification.requestPermission();
+  alert("Daily quote reminder set! You'll get a quote every 24 hours.");
+  setInterval(() => {
+    if (Notification.permission === "granted") {
+      const q = quotes[Math.floor(Math.random() * quotes.length)];
+      new Notification("🌿 Quote of the Day", { body: `${q.text} — ${q.author}` });
+    }
+  }, 86400000);
+});
+
+/* Export TXT */
+document.getElementById("export-txt").addEventListener("click", () => {
+  const content = favorites.join("\n\n");
+  const blob = new Blob([content], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "favorite-quotes.txt";
+  a.click();
+});
+
+/* Export PDF */
+document.getElementById("export-pdf").addEventListener("click", () => {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  let y = 10;
+  favorites.forEach(q => { doc.text(q, 10, y); y += 10; });
+  doc.save("favorite-quotes.pdf");
+});
+
+/* View Management */
+let currentView = 'random';
+function switchView(view) {
+  currentView = view;
+  quoteBox.style.display = view === 'random' ? 'block' : 'none';
+  nextBtn.style.display  = view === 'random' ? 'block' : 'none';
+  gridWrap.style.display = view !== 'random' ? 'grid' : 'none';
+  if (view === 'grid') {
+    populateGrid();
+    viewBtn.textContent = "🎲 Random View"; favViewBtn.textContent = "❤️ Favorites";
+  } else if (view === 'favorites') {
+    renderFavorites();
+    viewBtn.textContent = "📋 Grid View"; favViewBtn.textContent = "🎲 Random View";
+  } else {
+    showRandomQuote();
+    viewBtn.textContent = "📋 Grid View"; favViewBtn.textContent = "❤️ Favorites";
   }
 }
 
-/* ─── Button listeners ────────────────────────────── */
+/* Button Listeners */
 nextBtn.addEventListener('click', showRandomQuote);
-viewBtn.addEventListener('click', ()=> switchView(currentView==='random' ? 'grid' : 'random'));
-favViewBtn.addEventListener('click',()=> switchView(currentView==='favorites' ? 'random' : 'favorites'));
+viewBtn.addEventListener('click', () => switchView(currentView === 'random' ? 'grid' : 'random'));
+favViewBtn.addEventListener('click', () => switchView(currentView === 'favorites' ? 'random' : 'favorites'));
 
-/* ─── Init ─────────────────────────────────────────── */
+/* Init */
 populateGrid();
 showRandomQuote();
+
+// Open sidebar
+menuToggleBtn.addEventListener('click', () => {
+  sidebar.classList.add('active');
+  overlay.classList.add('active');
+});
+
+// Close sidebar
+closeMenuBtn.addEventListener('click', () => {
+  sidebar.classList.remove('active');
+  overlay.classList.remove('active');
+});
+
+// Close sidebar when clicking outside
+document.addEventListener('click', (e) => {
+  if (!sidebar.contains(e.target) && !menuToggleBtn.contains(e.target)) {
+    sidebar.classList.remove('active');
+    overlay.classList.remove('active');
+  }
+});
