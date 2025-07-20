@@ -198,11 +198,11 @@ body.dark .quote-card figcaption{
 
 /* Themes */
 body.theme-none { background: #fefcef;}
-body.theme-garden { background: url('images/Garden 3.jpg') no-repeat center/cover; }
-body.theme-cafe {background: url('Images/Cozy cafe 2.jpg') no-repeat center/cover;}
-body.theme-night { background: url('images/Starry night2.jpg') no-repeat center/cover; }
+body.theme-garden { background: url('images/Garden.jpg') no-repeat center/cover; }
+body.theme-cafe {background: url('images/Cozy cafe.jpg') no-repeat center/cover;}
+body.theme-night { background: url('images/Starry night.jpg') no-repeat center/cover; }
 body.theme-gradient { background: linear-gradient(135deg, #f0fdfa, #d8f1ee); }
-body.theme-notebook { background: url('Images/Notebook 1.jpg') repeat; }
+body.theme-notebook { background: url('images/Notebook.jpg') repeat; }
 
 /* Top Bar */
 .top-bar {
